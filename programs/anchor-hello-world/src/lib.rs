@@ -18,12 +18,6 @@ mod anchor_hello_world {
         counter.count += 1;
         Ok(())
     }
-    
-    // pub fn close(&self, sol_destination: AccountInfo<'info>) -> ProgramResult {
-    //     //todo
-    //     Ok(())
-
-    // }
 
     // pub fn closeaccount(ctx: Context<Closeaccount>, authority: Pubkey) -> ProgramResult {
     //     let counter: &mut Account<Counter> = &mut ctx.accounts.counter;
