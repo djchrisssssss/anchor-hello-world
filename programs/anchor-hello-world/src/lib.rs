@@ -19,12 +19,9 @@ mod anchor_hello_world {
         Ok(())
     }
 
-    // pub fn closeaccount(ctx: Context<Closeaccount>, authority: Pubkey) -> ProgramResult {
-    //     let counter: &mut Account<Counter> = &mut ctx.accounts.counter;
-    //     counter.authority = authority;
-    //     counter.count = 0;
-    //     Ok(())
-    // }
+    pub fn close_account(_ctx: Context<CloseAccount>) -> ProgramResult {
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -33,6 +30,7 @@ pub struct Initialize<'info> {
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
+    // Only needed when creating an account
     pub system_program: Program<'info, System>,
 }
 
@@ -43,12 +41,17 @@ pub struct Increment<'info> {
     pub authority: Signer<'info>,
 }
 
-// pub struct Closeaccount<'info> {
-//     #[account(init, payer = user, space = 8 + 40)]
-//     pub counter: Account<'info, Counter>,
-//     pub user: Signer<'info>,
-//     pub system_program: Program<'info, System>,
-// }
+#[derive(Accounts)]
+pub struct CloseAccount<'info> {
+    #[account(
+        mut, 
+        // close the account when the instruction end
+        close = authority,
+        has_one = authority,
+    )]
+    pub counter: Account<'info, Counter>,
+    pub authority: AccountInfo<'info>,
+}
 
 #[account]
 pub struct Counter {

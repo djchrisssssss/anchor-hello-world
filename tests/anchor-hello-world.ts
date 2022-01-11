@@ -13,7 +13,7 @@ describe('anchor-hello-world', () => {
 
   const program = anchor.workspace.AnchorHelloWorld as Program<AnchorHelloWorld>;
 
-  it("Initialize Account)", async () => {
+  it("Initialize Account", async () => {
     await program.rpc.initializean(provider.wallet.publicKey, {
       accounts: {
         counter: counter.publicKey,
@@ -29,7 +29,7 @@ describe('anchor-hello-world', () => {
     assert.ok(counterAccount.count.toNumber() === 0);
   });
 
-  it("Say Hello", async () => {
+  it("Increment", async () => {
     await program.rpc.increment({
       accounts: {
         counter: counter.publicKey,
@@ -45,20 +45,19 @@ describe('anchor-hello-world', () => {
     assert.ok(counterAccount.count.toNumber() == 1);
   });
 
-  // it("Close Account)", async () => {
-  //   await program.rpc.closeaccount(provider.wallet.publicKey, {
-  //     accounts: {
-  //       counter: counter.publicKey,
-  //       user: provider.wallet.publicKey,
-  //       systemProgram: SystemProgram.programId,
-  //     },
-  //     signers: [counter],
-  //   });
+  it("Close Account", async () => {
 
-  //   let counterAccount = await program.account.counter.fetch(counter.publicKey);
+    await program.rpc.closeAccount({
+      accounts: {
+        counter: counter.publicKey,
+        authority: provider.wallet.publicKey,
+      },
+    });
 
-  //   assert.ok(counterAccount.authority.equals(provider.wallet.publicKey));
-  //   assert.ok(counterAccount.count.toNumber() === 0);
-  // });
+    const counterAccount = await provider.connection.getAccountInfo(counter.publicKey);
+    // check if the account has been deleted
+    assert.ok(counterAccount === null);
+  
+  });
 
 });
